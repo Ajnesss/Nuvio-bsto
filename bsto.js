@@ -3,11 +3,32 @@
 
 function getStreams(tmdbId, mediaType, season, episode) {
   return new Promise((resolve, reject) => {
-    console.log(`[bs.to] Fetching ${mediaType} - TMDB: ${tmdbId}, S${season}E${episode}`);
+    console.log(`[bs.to DEBUG] ===== STARTING NEW REQUEST =====`);
+    console.log(`[bs.to DEBUG] Input: tmdbId=${tmdbId}, mediaType=${mediaType}, season=${season}, episode=${episode}`);
     
+    // For now, let's try a simpler approach - return test streams to verify the plugin works
+    // This bypasses all the scraping complexity
+    const testStreams = [
+      {
+        name: 'bs.to TEST',
+        title: `Test Stream - S${season}E${episode}`,
+        url: 'https://voe.sx/e/placeholder', // This won't work but proves the plugin is running
+        quality: 'German Dubbed (TEST)'
+      }
+    ];
+    
+    console.log(`[bs.to DEBUG] Returning ${testStreams.length} test streams`);
+    console.log(`[bs.to DEBUG] Streams:`, JSON.stringify(testStreams));
+    resolve(testStreams);
+    return;
+    
+    // Original code below (commented out for debugging)
+    /*
     // Step 1: Get title from TMDB
     const tmdbApiKey = '0f29e6d5b5091b01604780e7ea095ab6'; // Public TMDB key
     const tmdbUrl = `https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${tmdbApiKey}&language=de-DE`;
+    
+    console.log(`[bs.to DEBUG] TMDB URL: ${tmdbUrl}`);
     
     fetch(tmdbUrl)
       .then(response => response.json())
@@ -15,7 +36,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
         const title = data.name || data.title; // TV shows use 'name', movies use 'title'
         const originalTitle = data.original_name || data.original_title;
         
-        console.log(`[bs.to] Title: ${title}, Original: ${originalTitle}`);
+        console.log(`[bs.to DEBUG] Title: ${title}, Original: ${originalTitle}`);
         
         // Step 2: Convert title to bs.to URL format
         // bs.to uses format like: /serie/Breaking-Bad/1/1-Der-Einstieg/de
@@ -26,37 +47,43 @@ function getStreams(tmdbId, mediaType, season, episode) {
         if (mediaType === 'tv') {
           // For TV shows
           const bstoUrl = `https://bs.to/serie/${urlTitle}/${season}/${episode}/de`;
-          console.log(`[bs.to] Trying URL: ${bstoUrl}`);
+          console.log(`[bs.to DEBUG] Trying URL: ${bstoUrl}`);
           
           // Step 3: Fetch the episode page
           fetch(bstoUrl)
-            .then(response => response.text())
+            .then(response => {
+              console.log(`[bs.to DEBUG] Response status: ${response.status}`);
+              return response.text();
+            })
             .then(html => {
+              console.log(`[bs.to DEBUG] HTML length: ${html.length} characters`);
               // Step 4: Extract video host links from HTML
               const streams = extractStreamsFromHTML(html, title, season, episode);
               
               if (streams.length > 0) {
-                console.log(`[bs.to] Found ${streams.length} streams`);
+                console.log(`[bs.to DEBUG] Found ${streams.length} streams`);
+                console.log(`[bs.to DEBUG] Streams:`, JSON.stringify(streams));
                 resolve(streams);
               } else {
-                console.log('[bs.to] No streams found');
+                console.log('[bs.to DEBUG] No streams found in HTML');
                 resolve([]);
               }
             })
             .catch(error => {
-              console.error('[bs.to] Error fetching page:', error);
+              console.error('[bs.to DEBUG] Error fetching page:', error);
               resolve([]);
             });
         } else {
           // Movies not fully supported yet - would need different URL structure
-          console.log('[bs.to] Movies not yet supported');
+          console.log('[bs.to DEBUG] Movies not yet supported');
           resolve([]);
         }
       })
       .catch(error => {
-        console.error('[bs.to] Error fetching TMDB data:', error);
+        console.error('[bs.to DEBUG] Error fetching TMDB data:', error);
         resolve([]);
       });
+    */
   });
 }
 
