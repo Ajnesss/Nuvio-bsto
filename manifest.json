@@ -1,0 +1,28 @@
+{
+  "name": "bs.to German Providers",
+  "version": "1.0.0",
+  "scrapers": [
+    {
+      "id": "bsto",
+      "name": "bs.to",
+      "description": "German dubbed TV shows from bs.to (Burning Series)",
+      "version": "1.0.0",
+      "author": "Fortune",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "bsto.js",
+      "enabled": true,
+      "formats": [
+        "mp4",
+        "mkv",
+        "m3u8"
+      ],
+      "logo": "https://bs.to/favicon.ico",
+      "contentLanguage": [
+        "de"
+      ],
+      "notes": "Supports German dubbed TV series from bs.to. Movies coming soon."
+    }
+  ]
+}
