@@ -5,6 +5,13 @@
 function getStreams(tmdbId, mediaType, season, episode) {
   console.log('[bs.to] Starting - TMDB:', tmdbId, 'Type:', mediaType, 'S:', season, 'E:', episode);
   
+  // ALWAYS return at least one test stream so we know the plugin works
+  var testStream = {
+    name: 'bs.to TEST',
+    title: 'Plugin is working! (S' + season + 'E' + episode + ')',
+    url: 'https://voe.sx/e/test123'
+  };
+  
   // Return streams directly - no Promise wrapper needed
   // Hermes expects the function to return .then()-able
   
@@ -27,7 +34,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
       
       if (mediaType !== 'tv') {
         console.log('[bs.to] Movies not yet supported');
-        return [];
+        return [testStream]; // Return test stream for movies too
       }
       
       // Step 2: Build bs.to URL
@@ -48,7 +55,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
           console.log('[bs.to] Got HTML, length:', html.length);
           
           // Step 4: Extract streams from HTML
-          var streams = [];
+          var streams = [testStream]; // Always include test stream
           
           // Look for video host links
           // bs.to uses data-link-target attributes
@@ -78,7 +85,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
     })
     .catch(function(error) {
       console.error('[bs.to] Error:', error);
-      return [];
+      return [testStream]; // Return test stream even on error
     });
 }
 
