@@ -6,20 +6,23 @@ function getStreams(tmdbId, mediaType, season, episode) {
     console.log(`[bs.to DEBUG] ===== STARTING NEW REQUEST =====`);
     console.log(`[bs.to DEBUG] Input: tmdbId=${tmdbId}, mediaType=${mediaType}, season=${season}, episode=${episode}`);
     
-    // For now, let's try a simpler approach - return test streams to verify the plugin works
-    // This bypasses all the scraping complexity
-    const testStreams = [
-      {
-        name: 'bs.to TEST',
-        title: `Test Stream - S${season}E${episode}`,
-        url: 'https://voe.sx/e/placeholder', // This won't work but proves the plugin is running
-        quality: 'German Dubbed (TEST)'
-      }
-    ];
-    
-    console.log(`[bs.to DEBUG] Returning ${testStreams.length} test streams`);
-    console.log(`[bs.to DEBUG] Streams:`, JSON.stringify(testStreams));
-    resolve(testStreams);
+    // Ultra-simple test - just return a basic stream object
+    // This should definitely work if the plugin is being called
+    try {
+      const testStreams = [
+        {
+          name: 'bs.to',
+          title: 'German Test',
+          url: 'https://voe.sx/e/test123'
+        }
+      ];
+      
+      console.log('[bs.to DEBUG] Returning test stream');
+      resolve(testStreams);
+    } catch (error) {
+      console.error('[bs.to DEBUG] Error creating test stream:', error);
+      resolve([]);
+    }
     return;
     
     // Original code below (commented out for debugging)
